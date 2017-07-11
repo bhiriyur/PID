@@ -76,7 +76,7 @@ speed the max CTE was higher and also the car was wavering with a higher amplitu
 work on tuning the PID parameters further so that I can achieve a higher reference speed with greater
 stability.
 
-*Variations of Throttle Reference Value (45 mph vs. 50 mph)*
+**Variations of Throttle Reference Value (45 mph vs. 50 mph)**
 <center><img src="./build/throttle-variation-45-50.png" alt="Throttle Control" style="width: 400px;"/></center>
 
 ### Tuning Steering Control
@@ -93,12 +93,13 @@ it has on the various errors and control parameters. As shown in the graphs, alt
 in the lowest max CTE, Kd = 0.6 provided a better (or smoother) performance on average and also
 resulted in a higher average speed. 
 
-*Variations of Kd parameter*
+**Variations of Kd parameter**
 <center><img src="./build/compare_d.png" alt="Kd parameter" style="width: 400px;"/></center>
 
 With slight variations of Kp parameter around 0.058 this value is a local minumum (optimum) in
 terms of resulting in the lowest max CTE around the lap.
-*Variations of Kp parameter*
+
+**Variations of Kp parameter**
 <center><img src="./build/compare_p.png" alt="Kp parameter" style="width: 400px;"/></center>
 
 The final set of parameters were adjusted by manual "twiddling" around the converged set of
