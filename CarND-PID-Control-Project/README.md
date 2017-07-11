@@ -2,10 +2,28 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
-# Code Compilation and Dependencies
+## Code Compilation and Dependencies
 
 
-# Final Parameters and Result
+## Final Parameters and Result
+
+In this project, I ended up using a PID controller for throttle and another one
+for steering control. The final set of parameters that worked are as follows:
+
+### Throttle PID
+
+* Kp = 0.11
+* Ki = 0
+* Kd = 0.6
+* t_ref = 0.45 (Reference throttle value)
+
+Please see below section on tuning throttle parameters
+
+### Steering PID
+
+* Kp = 0.058
+* Ki = 0.003
+* Kd = 0.6
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=wyUB3-l_bt8"
 target="_blank"><img src="http://img.youtube.com/vi/wyUB3-l_bt8/0.jpg"
@@ -16,12 +34,15 @@ alt="Track 1 Performance" width="480" height="360" border="10" /></a>
 
 ## Tuning Throttle Control
 
+### Variations of Throttle Reference Value (45 mph vs. 50 mph)
 <center><img src="./build/throttle-variation-45-50.png" alt="Throttle Control" style="width: 400px;"/></center>
 
 ## Tuning Steering Control
 
+### Variations of Kd parameter
 <center><img src="./build/compare_d.png" alt="Kd parameter" style="width: 400px;"/></center>
 
+### Variations of Kp parameter
 <center><img src="./build/compare_p.png" alt="Kp parameter" style="width: 400px;"/></center>
 
 
