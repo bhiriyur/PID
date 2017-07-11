@@ -3,6 +3,7 @@
 #include "json.hpp"
 #include "PID.h"
 #include <math.h>
+#include <stdlib.h> // To open gnuplot
 
 // for convenience
 using json = nlohmann::json;
@@ -32,12 +33,24 @@ int main()
 {
   uWS::Hub h;
 
-  // Initialize the pid variable (Based on Jeremy Shannon's tests)
+  // Initialize the pid gains for both speed and throttle
   PID pid_s, pid_t;
-  pid_s.Init(0.052, 0.002, 0.6, true, "steer.out");
-  pid_t.Init(0.1, 0.0, 0.5, false, "throttle.out");
+  pid_s.Init(0.058, 0.003, 0.7, false, "steer.out");
+  pid_t.Init(0.11, 0.0, 0.6, false, "throttle.out");
+  double ref_throttle = 0.45;
+  
+  try {
+    /* *************************************
+     * Open the plotting utility
+     * **requires GNUPLOT and STDLIB.H**
+     * *************************************
+     */
+    system("gnuplot postprocess.plt > /dev/null 2>&1 &");
+  } catch (...) {
+    std::cout << "**Error** requires GNUPLOT and STDLIB.H (for running system commands)";
+  }
 
-  h.onMessage([&pid_s, &pid_t](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid_s, &pid_t, &ref_throttle](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -59,6 +72,9 @@ int main()
           * another PID controller to control the speed!
           */
 
+	  pid_t.speed = speed;
+	  pid_s.speed = speed;
+
 	  // Update steering PID controller
 	  pid_s.UpdateError(cte);
 	  double steer_value = pid_s.CalculateControl();
@@ -66,7 +82,7 @@ int main()
 	  // Update throttle PID controller
 	  double cte_t = std::fabs(cte);
 	  pid_t.UpdateError(cte_t);
-	  double throttle = pid_t.CalculateControl(0.5);
+	  double throttle = pid_t.CalculateControl(ref_throttle);
 
 	  //if (speed<5) throttle = 0.2;
 

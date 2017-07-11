@@ -1,5 +1,6 @@
 #include "PID.h"
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -28,6 +29,8 @@ void PID::Init(double Kp, double Ki, double Kd, bool dbg, string plotfile) {
   p_error = 0.0;
   i_error = 0.0;
   d_error = 0.0;
+  max_error = 0.0;
+  speed = 0.0;
 
   // Output file
   if (plotfile != "") {
@@ -37,7 +40,25 @@ void PID::Init(double Kp, double Ki, double Kd, bool dbg, string plotfile) {
     outfile << std::setw(11) << "p_error";
     outfile << std::setw(12) << "i_error";
     outfile << std::setw(12) << "d_error";
+    outfile << std::setw(12) << "max_error";
+    outfile << std::setw(12) << "speed";
     outfile << std::setw(12) << "control" << std::endl;
+
+    // Require two empty datapoints to start off gnuplot w/o warnings
+    outfile << std::setw(12) << p_error;
+    outfile << std::setw(12) << i_error;
+    outfile << std::setw(12) << d_error;
+    outfile << std::setw(12) << max_error;
+    outfile << std::setw(12) << speed;
+    outfile << std::setw(12) << 0.0 << std::endl;
+
+    outfile << std::setw(12) << p_error;
+    outfile << std::setw(12) << i_error;
+    outfile << std::setw(12) << d_error;
+    outfile << std::setw(12) << max_error;
+    outfile << std::setw(12) << speed;
+    outfile << std::setw(12) << 0.0 << std::endl;
+    
     outfile.flush();
   }
   
@@ -69,11 +90,15 @@ void PID::UpdateError(double cte) {
   // Proportional error
   p_error = cte;
 
+  // Maximum error
+  if (std::fabs(cte) > max_error) max_error = std::fabs(cte);
+
   if (DEBUG) {
-    std::cout << "Updating errors " << std::endl;
-    std::cout << "Kp = " << Kp << " p_error = " << p_error << std::endl;
-    std::cout << "Ki = " << Ki << " i_error = " << i_error << std::endl;
-    std::cout << "Kd = " << Kd << " d_error = " << d_error << std::endl;
+    std::cout << " ** Updating errors ** " << std::endl;
+    std::cout << " Kp = " << Kp << " p_error = " << p_error;
+    std::cout << " Ki = " << Ki << " i_error = " << i_error;
+    std::cout << " Kd = " << Kd << " d_error = " << d_error;
+    std::cout << " | Max_error = " << max_error << std::endl;
   }
 }
 
@@ -94,6 +119,8 @@ double PID::CalculateControl(double offset) {
     outfile << std::setw(12) << p_error;
     outfile << std::setw(12) << i_error;
     outfile << std::setw(12) << d_error;
+    outfile << std::setw(12) << max_error;
+    outfile << std::setw(12) << speed;
     outfile << std::setw(12) << output << std::endl;
     outfile.flush();
   }

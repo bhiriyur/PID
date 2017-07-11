@@ -13,6 +13,8 @@ public:
   double p_error;
   double i_error;
   double d_error;
+  double max_error;
+  double speed;
 
   /*
   * Coefficients
