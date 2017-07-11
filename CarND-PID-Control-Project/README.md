@@ -3,7 +3,29 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 ## Code Compilation and Dependencies
+In addition to the standard requirements, I have added a GNUplot plotting script
+to track the various errors and control values (as seen in video linked below).
+GNUplot is called via a system call with a plot script that is provided here. This
+feature will work if GNUplot is installed in the system, but since this block is within
+a try-catch block, the code should work even if the end user does not have this program
+installed.
 
+```
+  try {
+    /* *************************************
+     * Open the plotting utility
+     * **requires GNUPLOT and STDLIB.H**
+     * *************************************
+     */
+    system("gnuplot postprocess.plt > /dev/null 2>&1 &");
+  } catch (...) {
+    std::cout << "**Error** requires GNUPLOT and STDLIB.H (for running system commands)";
+  }
+```
+
+*Note*: Since this plotting utility is run in the background, rarely it may end up as a zombie
+process that doesn't die with the main pid program termination. In such an instance, the user
+will have to manually kill the gnuplot process
 
 ## Final Parameters and Result
 
@@ -25,27 +47,62 @@ Please see below section on tuning throttle parameters
 * Ki = 0.003
 * Kd = 0.6
 
+*Note*: The above set of parameters worked on my machine with screen resolution of 1024x768
+and graphics quality set to *Fastest*. It did not work as smoothly when I changed the
+graphics quality to *Fantastic*. These parameters may also depend on the hardware of the end
+user (which seems to affect latency).
+
+### Final Result
+
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=wyUB3-l_bt8"
 target="_blank"><img src="http://img.youtube.com/vi/wyUB3-l_bt8/0.jpg"
 alt="Track 1 Performance" width="480" height="360" border="10" /></a>
 
+## Reflection: Tuning PID Parameters
 
-# Reflection: Tuning PID Parameters
+Overall I used a variation of [Ziegler-Nichols](https://en.wikipedia.org/wiki/Ziegler%E2%80%93Nichols_method) to
+tune the PID parameters. Described below is the overall process workflow that I ended up using.
 
-## Tuning Throttle Control
+### Tuning Throttle Control
 
-### Variations of Throttle Reference Value (45 mph vs. 50 mph)
+I worked on the throttle PID to get the car to slow-down/brake as the absolute value of CTE
+  increased. I set the Ki parameter to 0 as there was no bias/drift involved here and played with
+  Kp and Kd parameters to get a good speed profile around the track.
+
+For the final result, I ended up using a reference throttle value of 0.45 (max speed = 45 mph) as this
+resulted in a lower maximum CTE around the lap. Below plots show a variation in various errors and control
+parameters as the reference throttle was changed from 0.45 to 0.50 (max speed = 50 mph). At the higher
+speed the max CTE was higher and also the car was wavering with a higher amplitude. In future, I will
+work on tuning the PID parameters further so that I can achieve a higher reference speed with greater
+stability.
+
+*Variations of Throttle Reference Value (45 mph vs. 50 mph)*
 <center><img src="./build/throttle-variation-45-50.png" alt="Throttle Control" style="width: 400px;"/></center>
 
-## Tuning Steering Control
+### Tuning Steering Control
 
-### Variations of Kd parameter
+I used Ziegler-Nichol's method to obtain a working set of Steering PID parameters until
+    I was able to get around the track. This involved setting all the parameters to 0. Then
+    increasing only the Kp parameter until I am able to get it completing (although oscillatory)
+    around the lap. Then I increased the Kd parameter until I was able to reduce the oscillations
+    and the max CTE. The Ki parameter was chosen based on the accumulating I-error as seen
+    in the charts.
+
+Below chart shows the variation of Kd parameter (around the final set of parameters) and the effect
+it has on the various errors and control parameters. As shown in the graphs, although Kd = 0.8 resulted
+in the lowest max CTE, Kd = 0.6 provided a better (or smoother) performance on average and also
+resulted in a higher average speed. 
+
+*Variations of Kd parameter*
 <center><img src="./build/compare_d.png" alt="Kd parameter" style="width: 400px;"/></center>
 
-### Variations of Kp parameter
+With slight variations of Kp parameter around 0.058 this value is a local minumum (optimum) in
+terms of resulting in the lowest max CTE around the lap.
+*Variations of Kp parameter*
 <center><img src="./build/compare_p.png" alt="Kp parameter" style="width: 400px;"/></center>
 
-
+The final set of parameters were adjusted by manual "twiddling" around the converged set of
+parameters from an initial Ziegler-Nichols application.
 ---
 
 ## Dependencies
