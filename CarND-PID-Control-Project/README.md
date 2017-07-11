@@ -2,6 +2,30 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+# Code Compilation and Dependencies
+
+
+# Final Parameters and Result
+
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=wyUB3-l_bt8"
+target="_blank"><img src="http://img.youtube.com/vi/wyUB3-l_bt8/0.jpg"
+alt="Track 1 Performance" width="480" height="360" border="10" /></a>
+
+
+# Reflection: Tuning PID Parameters
+
+## Tuning Throttle Control
+
+<center><img src="./build/throttle-variation-45-50.png" alt="Throttle Control" style="width: 400px;"/></center>
+
+## Tuning Steering Control
+
+<center><img src="./build/compare_d.png.png" alt="Kd parameter" style="width: 400px;"/></center>
+
+<center><img src="./build/compare_p.png.png" alt="Kp parameter" style="width: 400px;"/></center>
+
+
+---
 
 ## Dependencies
 
