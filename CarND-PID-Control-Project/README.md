@@ -20,9 +20,9 @@ alt="Track 1 Performance" width="480" height="360" border="10" /></a>
 
 ## Tuning Steering Control
 
-<center><img src="./build/compare_d.png.png" alt="Kd parameter" style="width: 400px;"/></center>
+<center><img src="./build/compare_d.png" alt="Kd parameter" style="width: 400px;"/></center>
 
-<center><img src="./build/compare_p.png.png" alt="Kp parameter" style="width: 400px;"/></center>
+<center><img src="./build/compare_p.png" alt="Kp parameter" style="width: 400px;"/></center>
 
 
 ---
